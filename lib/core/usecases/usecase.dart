@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
 import '../errors/failures.dart';
 
-abstract class UseCase<Type, Params> {
-  Future<Either<Failure, Type>> call(Params params);
+abstract class UseCase<R, Params> {
+  Future<Either<Failure, R>> call(Params params);
 }
 
 class NoParams {
   const NoParams();
 }
 
-abstract class StreamUseCase<Type, Params> {
-  Stream<Either<Failure, Type>> call(Params params);
+abstract class StreamUseCase<R, Params> {
+  Stream<Either<Failure, R>> call(Params params);
 }

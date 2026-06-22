@@ -73,6 +73,39 @@ class ProductModel extends ProductEntity {
     );
   }
 
+  Map<String, dynamic> toFirestore() => toMap();
+
+  ProductEntity toEntity() => this;
+
+  factory ProductModel.fromEntity(ProductEntity e) => ProductModel(
+    id: e.id,
+    name: e.name,
+    description: e.description,
+    price: e.price,
+    salePrice: e.salePrice,
+    originalPrice: e.originalPrice,
+    categoryId: e.categoryId,
+    categoryName: e.categoryName,
+    imageUrls: e.imageUrls,
+    rating: e.rating,
+    reviewCount: e.reviewCount,
+    stockQuantity: e.stockQuantity,
+    isAvailable: e.isAvailable,
+    status: e.status,
+    tags: e.tags,
+    specifications: e.specifications,
+    variants: e.variants,
+    brand: e.brand,
+    sku: e.sku,
+    createdAt: e.createdAt,
+    updatedAt: e.updatedAt,
+    createdBy: e.createdBy,
+    isFeatured: e.isFeatured,
+    isFlashSale: e.isFlashSale,
+    flashSaleEnd: e.flashSaleEnd,
+    soldCount: e.soldCount,
+  );
+
   Map<String, dynamic> toMap() => {
     'name': name,
     'description': description,
@@ -131,4 +164,101 @@ class CategoryModel extends CategoryEntity {
       isActive: d['isActive'] ?? true,
     );
   }
+
+  CategoryEntity toEntity() => this;
+
+  factory CategoryModel.fromEntity(CategoryEntity e) => CategoryModel(
+    id: e.id,
+    name: e.name,
+    imageUrl: e.imageUrl,
+    iconName: e.iconName,
+    colorHex: e.colorHex,
+    productCount: e.productCount,
+    sortOrder: e.sortOrder,
+    isActive: e.isActive,
+  );
+}
+
+class BannerModel extends BannerEntity {
+  const BannerModel({
+    required super.id,
+    required super.title,
+    super.subtitle,
+    required super.imageUrl,
+    super.deepLink,
+    super.sortOrder,
+    super.isActive,
+    super.expiresAt,
+  });
+
+  factory BannerModel.fromFirestore(DocumentSnapshot doc) {
+    final d = doc.data() as Map<String, dynamic>;
+    return BannerModel(
+      id: doc.id,
+      title: d['title'] ?? '',
+      subtitle: d['subtitle'],
+      imageUrl: d['imageUrl'] ?? '',
+      deepLink: d['deepLink'],
+      sortOrder: d['sortOrder'] ?? 0,
+      isActive: d['isActive'] ?? true,
+      expiresAt: (d['expiresAt'] as Timestamp?)?.toDate(),
+    );
+  }
+
+  Map<String, dynamic> toMap() => {
+    'title': title,
+    'subtitle': subtitle,
+    'imageUrl': imageUrl,
+    'deepLink': deepLink,
+    'sortOrder': sortOrder,
+    'isActive': isActive,
+    'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+  };
+
+  BannerEntity toEntity() => this;
+}
+
+class ReviewModel extends ReviewEntity {
+  const ReviewModel({
+    required super.id,
+    required super.productId,
+    required super.userId,
+    required super.userName,
+    super.userAvatar,
+    required super.rating,
+    required super.comment,
+    super.imageUrls,
+    required super.createdAt,
+    super.helpfulCount,
+  });
+
+  factory ReviewModel.fromFirestore(DocumentSnapshot doc) {
+    final d = doc.data() as Map<String, dynamic>;
+    return ReviewModel(
+      id: doc.id,
+      productId: d['productId'] ?? '',
+      userId: d['userId'] ?? '',
+      userName: d['userName'] ?? '',
+      userAvatar: d['userAvatar'],
+      rating: (d['rating'] ?? 0).toDouble(),
+      comment: d['comment'] ?? '',
+      imageUrls: List<String>.from(d['imageUrls'] ?? []),
+      createdAt: (d['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      helpfulCount: d['helpfulCount'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toFirestore() => {
+    'productId': productId,
+    'userId': userId,
+    'userName': userName,
+    'userAvatar': userAvatar,
+    'rating': rating,
+    'comment': comment,
+    'imageUrls': imageUrls,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'helpfulCount': helpfulCount,
+  };
+
+  ReviewEntity toEntity() => this;
 }

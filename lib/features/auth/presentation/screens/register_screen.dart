@@ -46,7 +46,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             content: Text(next.errorMessage!),
             backgroundColor: HAColors.error,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
         ref.read(authNotifierProvider.notifier).clearError();
@@ -72,7 +73,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'Join thousands of happy shoppers',
-                  style: theme.textTheme.bodyLarge?.copyWith(color: HAColors.slate400),
+                  style: theme.textTheme.bodyLarge
+                      ?.copyWith(color: HAColors.slate400),
                 ),
                 const SizedBox(height: 40),
                 AuthTextField(
@@ -82,8 +84,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   prefixIcon: Icons.person_outline_rounded,
                   textInputAction: TextInputAction.next,
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Name is required';
-                    if (v.trim().length < 2) return 'Name must be at least 2 characters';
+                    if (v == null || v.trim().isEmpty) {
+                      return 'Name is required';
+                    }
+                    if (v.trim().length < 2) {
+                      return 'Name must be at least 2 characters';
+                    }
                     return null;
                   },
                 ),
@@ -97,7 +103,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   validator: (v) {
                     if (v == null || v.isEmpty) return 'Email is required';
-                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) return 'Enter a valid email';
+                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
+                      return 'Enter a valid email';
+                    }
                     return null;
                   },
                 ),
@@ -110,16 +118,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   prefixIcon: Icons.lock_outline_rounded,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                      color: HAColors.slate400, size: 20,
+                      _obscurePassword
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                      color: HAColors.slate400,
+                      size: 20,
                     ),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    onPressed: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
                   ),
                   textInputAction: TextInputAction.next,
                   validator: (v) {
                     if (v == null || v.isEmpty) return 'Password is required';
-                    if (v.length < 8) return 'Password must be at least 8 characters';
-                    if (!RegExp(r'(?=.*[A-Z])').hasMatch(v)) return 'Include at least one uppercase letter';
+                    if (v.length < 8) {
+                      return 'Password must be at least 8 characters';
+                    }
+                    if (!RegExp(r'(?=.*[A-Z])').hasMatch(v)) {
+                      return 'Include at least one uppercase letter';
+                    }
                     return null;
                   },
                 ),
@@ -132,15 +148,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   prefixIcon: Icons.lock_outline_rounded,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscureConfirm ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                      color: HAColors.slate400, size: 20,
+                      _obscureConfirm
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                      color: HAColors.slate400,
+                      size: 20,
                     ),
-                    onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                    onPressed: () =>
+                        setState(() => _obscureConfirm = !_obscureConfirm),
                   ),
                   textInputAction: TextInputAction.done,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Please confirm your password';
-                    if (v != _passwordCtrl.text) return 'Passwords do not match';
+                    if (v == null || v.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    if (v != _passwordCtrl.text) {
+                      return 'Passwords do not match';
+                    }
                     return null;
                   },
                 ),
@@ -164,7 +188,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       onTap: () => context.go('/login'),
                       child: Text(
                         'Sign in',
-                        style: HATextStyles.labelMedium.copyWith(color: HAColors.secondary),
+                        style: HATextStyles.labelMedium
+                            .copyWith(color: HAColors.secondary),
                       ),
                     ),
                   ],
@@ -178,47 +203,52 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Widget _buildTermsCheckbox(ThemeData theme) => Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Checkbox(
-        value: _agreeToTerms,
-        onChanged: (v) => setState(() => _agreeToTerms = v ?? false),
-        activeColor: HAColors.secondary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        side: const BorderSide(color: HAColors.slate400),
-      ),
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: RichText(
-            text: TextSpan(
-              style: theme.textTheme.bodySmall,
-              children: [
-                const TextSpan(text: 'I agree to the '),
-                TextSpan(
-                  text: 'Terms of Service',
-                  style: TextStyle(color: HAColors.secondary, fontWeight: FontWeight.w600),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Checkbox(
+            value: _agreeToTerms,
+            onChanged: (v) => setState(() => _agreeToTerms = v ?? false),
+            activeColor: HAColors.secondary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            side: const BorderSide(color: HAColors.slate400),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: RichText(
+                text: TextSpan(
+                  style: theme.textTheme.bodySmall,
+                  children: const [
+                    TextSpan(text: 'I agree to the '),
+                    TextSpan(
+                      text: 'Terms of Service',
+                      style: TextStyle(
+                          color: HAColors.secondary,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    TextSpan(text: ' and '),
+                    TextSpan(
+                      text: 'Privacy Policy',
+                      style: TextStyle(
+                          color: HAColors.secondary,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ),
-                const TextSpan(text: ' and '),
-                TextSpan(
-                  text: 'Privacy Policy',
-                  style: TextStyle(color: HAColors.secondary, fontWeight: FontWeight.w600),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    ],
-  );
+        ],
+      );
 
   void _handleRegister() {
     if (_formKey.currentState?.validate() ?? false) {
       ref.read(authNotifierProvider.notifier).register(
-        _emailCtrl.text.trim(),
-        _passwordCtrl.text,
-        _nameCtrl.text.trim(),
-      );
+            _emailCtrl.text.trim(),
+            _passwordCtrl.text,
+            _nameCtrl.text.trim(),
+          );
     }
   }
 }

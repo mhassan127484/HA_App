@@ -16,13 +16,13 @@ class FirestoreProductDataSource {
         _storage = storage;
 
   CollectionReference get _products =>
-      _firestore.collection(FirestoreCollections.products);
+      _firestore.collection(AppConstants.productsCollection);
   CollectionReference get _categories =>
-      _firestore.collection(FirestoreCollections.categories);
+      _firestore.collection(AppConstants.categoriesCollection);
   CollectionReference get _banners =>
-      _firestore.collection(FirestoreCollections.banners);
+      _firestore.collection(AppConstants.bannersCollection);
   CollectionReference get _reviews =>
-      _firestore.collection(FirestoreCollections.reviews);
+      _firestore.collection(AppConstants.reviewsCollection);
 
   Future<List<ProductModel>> getProducts({
     String? categoryId,
@@ -177,7 +177,7 @@ class FirestoreProductDataSource {
     required File imageFile,
   }) async {
     final filename = '${const Uuid().v4()}.jpg';
-    final ref = _storage.ref(StoragePaths.productImage(productId, filename));
+    final ref = _storage.ref('${AppConstants.productImagesPath}/$productId/$filename');
     await ref.putFile(imageFile);
     return await ref.getDownloadURL();
   }

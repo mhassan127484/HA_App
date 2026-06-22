@@ -11,10 +11,12 @@ class EmailVerificationScreen extends ConsumerStatefulWidget {
   const EmailVerificationScreen({super.key});
 
   @override
-  ConsumerState<EmailVerificationScreen> createState() => _EmailVerificationScreenState();
+  ConsumerState<EmailVerificationScreen> createState() =>
+      _EmailVerificationScreenState();
 }
 
-class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScreen> {
+class _EmailVerificationScreenState
+    extends ConsumerState<EmailVerificationScreen> {
   Timer? _checkTimer;
   bool _canResend = false;
   int _countdown = 60;
@@ -77,13 +79,14 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
                   borderRadius: BorderRadius.circular(36),
                   boxShadow: [
                     BoxShadow(
-                      color: HAColors.secondary.withOpacity(0.35),
+                      color: HAColors.secondary.withValues(alpha: 0.35),
                       blurRadius: 32,
                       offset: const Offset(0, 16),
                     ),
                   ],
                 ),
-                child: const Icon(Icons.mark_email_unread_rounded, color: Colors.white, size: 56),
+                child: const Icon(Icons.mark_email_unread_rounded,
+                    color: Colors.white, size: 56),
               ),
               const SizedBox(height: 40),
               Text(
@@ -98,13 +101,15 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
               Text(
                 'We\'ve sent a verification link to\n$email',
                 textAlign: TextAlign.center,
-                style: HATextStyles.bodyLarge.copyWith(color: HAColors.slate400),
+                style:
+                    HATextStyles.bodyLarge.copyWith(color: HAColors.slate400),
               ),
               const SizedBox(height: 12),
               Text(
                 'Click the link in the email to verify your account. This page updates automatically.',
                 textAlign: TextAlign.center,
-                style: HATextStyles.bodySmall.copyWith(color: HAColors.slate500),
+                style:
+                    HATextStyles.bodySmall.copyWith(color: HAColors.slate500),
               ),
               const Spacer(),
               _buildResendButton(authState),
@@ -116,7 +121,8 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
                 },
                 child: Text(
                   'Use a different account',
-                  style: HATextStyles.labelMedium.copyWith(color: HAColors.slate400),
+                  style: HATextStyles.labelMedium
+                      .copyWith(color: HAColors.slate400),
                 ),
               ),
               const SizedBox(height: 24),
@@ -128,23 +134,28 @@ class _EmailVerificationScreenState extends ConsumerState<EmailVerificationScree
   }
 
   Widget _buildResendButton(AuthState authState) => SizedBox(
-    width: double.infinity,
-    height: 52,
-    child: OutlinedButton(
-      onPressed: _canResend && !authState.isLoading ? _handleResend : null,
-      child: authState.isLoading
-          ? const SizedBox(
-              width: 20, height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2, color: HAColors.secondary),
-            )
-          : Text(
-              _canResend ? 'Resend verification email' : 'Resend in ${_countdown}s',
-            ),
-    ),
-  );
+        width: double.infinity,
+        height: 52,
+        child: OutlinedButton(
+          onPressed: _canResend && !authState.isLoading ? _handleResend : null,
+          child: authState.isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2, color: HAColors.secondary),
+                )
+              : Text(
+                  _canResend
+                      ? 'Resend verification email'
+                      : 'Resend in ${_countdown}s',
+                ),
+        ),
+      );
 
   void _handleResend() async {
-    final success = await ref.read(authNotifierProvider.notifier).resendVerification();
+    final success =
+        await ref.read(authNotifierProvider.notifier).resendVerification();
     if (success) {
       setState(() {
         _canResend = false;

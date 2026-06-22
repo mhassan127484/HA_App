@@ -11,7 +11,8 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
@@ -40,110 +41,121 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-          child: _emailSent ? _buildSuccessView(context) : _buildFormView(context, theme, authState),
+          child: _emailSent
+              ? _buildSuccessView(context)
+              : _buildFormView(context, theme, authState),
         ),
       ),
     );
   }
 
-  Widget _buildFormView(BuildContext context, ThemeData theme, AuthState authState) => Form(
-    key: _formKey,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        IconButton(
-          onPressed: () => context.go('/login'),
-          icon: const Icon(Icons.arrow_back_ios_rounded),
-          padding: EdgeInsets.zero,
-        ),
-        const SizedBox(height: 40),
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: HAColors.secondary.withOpacity(0.15),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: const Icon(Icons.lock_reset_rounded, color: HAColors.secondary, size: 32),
-        ),
-        const SizedBox(height: 24),
-        Text('Reset password', style: theme.textTheme.headlineMedium),
-        const SizedBox(height: 12),
-        Text(
-          'Enter your email and we\'ll send you a link to reset your password.',
-          style: theme.textTheme.bodyLarge?.copyWith(color: HAColors.slate400),
-        ),
-        const SizedBox(height: 40),
-        AuthTextField(
-          controller: _emailCtrl,
-          label: 'Email',
-          hint: 'you@example.com',
-          keyboardType: TextInputType.emailAddress,
-          prefixIcon: Icons.email_outlined,
-          validator: (v) {
-            if (v == null || v.isEmpty) return 'Email is required';
-            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) return 'Enter a valid email';
-            return null;
-          },
-        ),
-        const SizedBox(height: 32),
-        AuthGradientButton(
-          label: 'Send Reset Link',
-          isLoading: authState.isLoading,
-          onPressed: _handleReset,
-        ),
-      ],
-    ),
-  );
-
-  Widget _buildSuccessView(BuildContext context) => Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        width: 96,
-        height: 96,
-        decoration: BoxDecoration(
-          gradient: HAColors.primaryGradient,
-          borderRadius: BorderRadius.circular(28),
-          boxShadow: [
-            BoxShadow(
-              color: HAColors.secondary.withOpacity(0.3),
-              blurRadius: 24,
-              offset: const Offset(0, 12),
+  Widget _buildFormView(
+          BuildContext context, ThemeData theme, AuthState authState) =>
+      Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconButton(
+              onPressed: () => context.go('/login'),
+              icon: const Icon(Icons.arrow_back_ios_rounded),
+              padding: EdgeInsets.zero,
+            ),
+            const SizedBox(height: 40),
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: HAColors.secondary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(Icons.lock_reset_rounded,
+                  color: HAColors.secondary, size: 32),
+            ),
+            const SizedBox(height: 24),
+            Text('Reset password', style: theme.textTheme.headlineMedium),
+            const SizedBox(height: 12),
+            Text(
+              'Enter your email and we\'ll send you a link to reset your password.',
+              style:
+                  theme.textTheme.bodyLarge?.copyWith(color: HAColors.slate400),
+            ),
+            const SizedBox(height: 40),
+            AuthTextField(
+              controller: _emailCtrl,
+              label: 'Email',
+              hint: 'you@example.com',
+              keyboardType: TextInputType.emailAddress,
+              prefixIcon: Icons.email_outlined,
+              validator: (v) {
+                if (v == null || v.isEmpty) return 'Email is required';
+                if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
+                  return 'Enter a valid email';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 32),
+            AuthGradientButton(
+              label: 'Send Reset Link',
+              isLoading: authState.isLoading,
+              onPressed: _handleReset,
             ),
           ],
         ),
-        child: const Icon(Icons.mark_email_read_outlined, color: Colors.white, size: 48),
-      ),
-      const SizedBox(height: 32),
-      Text(
-        'Check your inbox',
-        style: HATextStyles.h2.copyWith(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? HAColors.textPrimaryDark
-              : HAColors.textPrimaryLight,
-        ),
-      ),
-      const SizedBox(height: 12),
-      Text(
-        'We sent a reset link to\n${_emailCtrl.text}',
-        textAlign: TextAlign.center,
-        style: HATextStyles.bodyLarge.copyWith(color: HAColors.slate400),
-      ),
-      const SizedBox(height: 48),
-      SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () => context.go('/login'),
-          child: const Text('Back to Sign In'),
-        ),
-      ),
-    ],
-  );
+      );
+
+  Widget _buildSuccessView(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 96,
+            height: 96,
+            decoration: BoxDecoration(
+              gradient: HAColors.primaryGradient,
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: HAColors.secondary.withValues(alpha: 0.3),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+            child: const Icon(Icons.mark_email_read_outlined,
+                color: Colors.white, size: 48),
+          ),
+          const SizedBox(height: 32),
+          Text(
+            'Check your inbox',
+            style: HATextStyles.h2.copyWith(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? HAColors.textPrimaryDark
+                  : HAColors.textPrimaryLight,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'We sent a reset link to\n${_emailCtrl.text}',
+            textAlign: TextAlign.center,
+            style: HATextStyles.bodyLarge.copyWith(color: HAColors.slate400),
+          ),
+          const SizedBox(height: 48),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => context.go('/login'),
+              child: const Text('Back to Sign In'),
+            ),
+          ),
+        ],
+      );
 
   void _handleReset() {
     if (_formKey.currentState?.validate() ?? false) {
-      ref.read(authNotifierProvider.notifier).sendPasswordReset(_emailCtrl.text.trim());
+      ref
+          .read(authNotifierProvider.notifier)
+          .sendPasswordReset(_emailCtrl.text.trim());
     }
   }
 }

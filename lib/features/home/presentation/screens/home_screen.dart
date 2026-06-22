@@ -57,13 +57,17 @@ class HomeScreen extends ConsumerWidget {
                 Text(
                   'Good ${_greeting()},',
                   style: HATextStyles.bodySmall.copyWith(
-                    color: isDark ? HAColors.textSecondaryDark : HAColors.textSecondaryLight,
+                    color: isDark
+                        ? HAColors.textSecondaryDark
+                        : HAColors.textSecondaryLight,
                   ),
                 ),
                 Text(
                   name?.split(' ').first ?? 'Shopper',
                   style: HATextStyles.h4.copyWith(
-                    color: isDark ? HAColors.textPrimaryDark : HAColors.textPrimaryLight,
+                    color: isDark
+                        ? HAColors.textPrimaryDark
+                        : HAColors.textPrimaryLight,
                   ),
                 ),
               ],
@@ -79,42 +83,46 @@ class HomeScreen extends ConsumerWidget {
             padding: const EdgeInsets.only(right: 16),
             child: CircleAvatar(
               radius: 18,
-              backgroundColor: HAColors.secondary.withOpacity(0.15),
-              child: const Icon(Icons.person_rounded, color: HAColors.secondary, size: 20),
+              backgroundColor: HAColors.secondary.withValues(alpha: 0.15),
+              child: const Icon(Icons.person_rounded,
+                  color: HAColors.secondary, size: 20),
             ),
           ),
         ],
       );
 
   Widget _buildSearchBar(BuildContext context, bool isDark) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: GestureDetector(
-      onTap: () => context.push('/products'),
-      child: Container(
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: isDark ? HAColors.darkElevated : HAColors.lightElevated,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isDark ? HAColors.darkBorder : HAColors.lightBorder,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: GestureDetector(
+          onTap: () => context.push('/products'),
+          child: Container(
+            height: 52,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: isDark ? HAColors.darkElevated : HAColors.lightElevated,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: isDark ? HAColors.darkBorder : HAColors.lightBorder,
+              ),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.search_rounded,
+                    color: HAColors.slate400, size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  'Search products, brands...',
+                  style: HATextStyles.bodyMedium
+                      .copyWith(color: HAColors.slate400),
+                ),
+              ],
+            ),
           ),
         ),
-        child: Row(
-          children: [
-            const Icon(Icons.search_rounded, color: HAColors.slate400, size: 20),
-            const SizedBox(width: 12),
-            Text(
-              'Search products, brands...',
-              style: HATextStyles.bodyMedium.copyWith(color: HAColors.slate400),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
+      );
 
-  Widget _buildFeaturedSection(BuildContext context, WidgetRef ref, bool isDark) {
+  Widget _buildFeaturedSection(
+      BuildContext context, WidgetRef ref, bool isDark) {
     final featured = ref.watch(featuredProductsProvider);
     return SliverToBoxAdapter(
       child: Column(
@@ -162,7 +170,8 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTrendingSection(BuildContext context, WidgetRef ref, bool isDark) {
+  Widget _buildTrendingSection(
+      BuildContext context, WidgetRef ref, bool isDark) {
     final trending = ref.watch(trendingProductsProvider);
     return SliverToBoxAdapter(
       child: Column(
@@ -253,7 +262,8 @@ class _TrendingProductTile extends StatelessWidget {
                 width: 64,
                 height: 64,
                 color: isDark ? HAColors.darkElevated : HAColors.lightElevated,
-                child: const Icon(Icons.image_outlined, color: HAColors.slate400),
+                child:
+                    const Icon(Icons.image_outlined, color: HAColors.slate400),
               ),
             ),
             const SizedBox(width: 12),
@@ -264,7 +274,9 @@ class _TrendingProductTile extends StatelessWidget {
                   Text(
                     product.name,
                     style: HATextStyles.labelLarge.copyWith(
-                      color: isDark ? HAColors.textPrimaryDark : HAColors.textPrimaryLight,
+                      color: isDark
+                          ? HAColors.textPrimaryDark
+                          : HAColors.textPrimaryLight,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -272,7 +284,8 @@ class _TrendingProductTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     product.categoryName,
-                    style: HATextStyles.bodySmall.copyWith(color: HAColors.slate400),
+                    style: HATextStyles.bodySmall
+                        .copyWith(color: HAColors.slate400),
                   ),
                 ],
               ),
@@ -287,7 +300,8 @@ class _TrendingProductTile extends StatelessWidget {
                 if (product.isOnSale)
                   Text(
                     '-${product.discountPercent}%',
-                    style: HATextStyles.labelSmall.copyWith(color: HAColors.error),
+                    style:
+                        HATextStyles.labelSmall.copyWith(color: HAColors.error),
                   ),
               ],
             ),

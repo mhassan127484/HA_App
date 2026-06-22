@@ -18,7 +18,8 @@ class AdminProductsScreen extends ConsumerStatefulWidget {
   const AdminProductsScreen({super.key});
 
   @override
-  ConsumerState<AdminProductsScreen> createState() => _AdminProductsScreenState();
+  ConsumerState<AdminProductsScreen> createState() =>
+      _AdminProductsScreenState();
 }
 
 class _AdminProductsScreenState extends ConsumerState<AdminProductsScreen> {
@@ -33,10 +34,12 @@ class _AdminProductsScreenState extends ConsumerState<AdminProductsScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
-        title: Text('Products', style: HATextStyles.h3.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+        title: Text('Products',
+            style: HATextStyles.h3
+                .copyWith(color: Theme.of(context).colorScheme.onSurface)),
         actions: [
           IconButton(
-            icon: Icon(Icons.add_rounded, color: HAColors.secondary),
+            icon: const Icon(Icons.add_rounded, color: HAColors.secondary),
             onPressed: () => context.push('/admin/products/add'),
           ),
         ],
@@ -59,7 +62,8 @@ class _AdminProductsScreenState extends ConsumerState<AdminProductsScreen> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
               ),
             ),
           ),
@@ -71,7 +75,11 @@ class _AdminProductsScreenState extends ConsumerState<AdminProductsScreen> {
               data: (products) {
                 final filtered = _search.isEmpty
                     ? products
-                    : products.where((p) => (p['name'] as String? ?? '').toLowerCase().contains(_search)).toList();
+                    : products
+                        .where((p) => (p['name'] as String? ?? '')
+                            .toLowerCase()
+                            .contains(_search))
+                        .toList();
 
                 if (filtered.isEmpty) {
                   return const Center(child: Text('No products found'));
@@ -81,7 +89,8 @@ class _AdminProductsScreenState extends ConsumerState<AdminProductsScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   itemCount: filtered.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) => _AdminProductRow(product: filtered[index]),
+                  itemBuilder: (context, index) =>
+                      _AdminProductRow(product: filtered[index]),
                 );
               },
             ),
@@ -111,7 +120,8 @@ class _AdminProductRow extends ConsumerWidget {
       decoration: BoxDecoration(
         color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+        border: Border.all(
+            color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
       ),
       child: Row(
         children: [
@@ -125,7 +135,7 @@ class _AdminProductRow extends ConsumerWidget {
               errorWidget: (_, __, ___) => Container(
                 width: 56,
                 height: 56,
-                color: HAColors.primary.withOpacity(0.1),
+                color: HAColors.primary.withValues(alpha: 0.1),
                 child: const Icon(Icons.image_outlined, size: 24),
               ),
             ),
@@ -135,16 +145,25 @@ class _AdminProductRow extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: HATextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(name,
+                    style: HATextStyles.bodyMedium
+                        .copyWith(fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 2),
                 Row(
                   children: [
-                    Text('\$${price.toStringAsFixed(2)}', style: HATextStyles.labelMedium.copyWith(color: HAColors.secondary)),
+                    Text('\$${price.toStringAsFixed(2)}',
+                        style: HATextStyles.labelMedium
+                            .copyWith(color: HAColors.secondary)),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: stock > 0 ? HAColors.success.withOpacity(0.1) : HAColors.error.withOpacity(0.1),
+                        color: stock > 0
+                            ? HAColors.success.withValues(alpha: 0.1)
+                            : HAColors.error.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
@@ -177,7 +196,8 @@ class _AdminProductRow extends ConsumerWidget {
               ),
               // Delete
               IconButton(
-                icon: Icon(Icons.delete_outline_rounded, size: 20, color: HAColors.error),
+                icon: const Icon(Icons.delete_outline_rounded,
+                    size: 20, color: HAColors.error),
                 onPressed: () => _confirmDelete(context, product['id'], name),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
@@ -196,13 +216,18 @@ class _AdminProductRow extends ConsumerWidget {
         title: const Text('Delete Product'),
         content: Text('Delete "$name"? This cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           TextButton(
             onPressed: () {
-              FirebaseFirestore.instance.collection('products').doc(id).delete();
+              FirebaseFirestore.instance
+                  .collection('products')
+                  .doc(id)
+                  .delete();
               Navigator.pop(ctx);
             },
-            child: Text('Delete', style: TextStyle(color: HAColors.error)),
+            child:
+                const Text('Delete', style: TextStyle(color: HAColors.error)),
           ),
         ],
       ),

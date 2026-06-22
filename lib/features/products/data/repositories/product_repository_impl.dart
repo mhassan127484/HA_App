@@ -127,10 +127,10 @@ class ProductRepositoryImpl implements IProductRepository {
         productId: productId,
         userId: userId,
         userName: userName,
-        userAvatarUrl: userAvatarUrl,
+        userAvatar: userAvatarUrl,
         rating: rating,
         comment: comment,
-        images: images,
+        imageUrls: images,
         createdAt: DateTime.now(),
       );
       final result = await _dataSource.addReview(model);

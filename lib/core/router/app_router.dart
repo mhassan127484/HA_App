@@ -46,7 +46,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (!isAuthenticated && !isOnAuthPath) return '/login';
       if (isAuthenticated && !isEmailVerified && path != '/verify-email') return '/verify-email';
       if (isAuthenticated && isEmailVerified && isOnAuthPath) {
-        return user!.isAdmin ? '/admin' : '/home';
+        return user.isAdmin ? '/admin' : '/home';
       }
       return null;
     },

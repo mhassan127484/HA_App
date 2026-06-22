@@ -4,7 +4,6 @@ import 'dart:io';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../models/product_model.dart';
-import '../../domain/entities/product_entity.dart';
 
 abstract class ProductRemoteDataSource {
   Future<List<ProductModel>> getProducts({
@@ -19,7 +18,8 @@ abstract class ProductRemoteDataSource {
   Future<List<ProductModel>> getTrendingProducts();
   Future<ProductModel> getProductById(String id);
   Future<List<CategoryModel>> getCategories();
-  Future<List<ProductModel>> getRelatedProducts(String productId, String categoryId);
+  Future<List<ProductModel>> getRelatedProducts(
+      String productId, String categoryId);
   Future<String> uploadProductImage(File image, String productId);
   Future<ProductModel> addProduct(Map<String, dynamic> data);
   Future<ProductModel> updateProduct(String id, Map<String, dynamic> data);
@@ -37,8 +37,10 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   })  : _firestore = firestore,
         _storage = storage;
 
-  CollectionReference get _products => _firestore.collection(AppConstants.productsCollection);
-  CollectionReference get _categories => _firestore.collection(AppConstants.categoriesCollection);
+  CollectionReference get _products =>
+      _firestore.collection(AppConstants.productsCollection);
+  CollectionReference get _categories =>
+      _firestore.collection(AppConstants.categoriesCollection);
 
   @override
   Future<List<ProductModel>> getProducts({
@@ -49,16 +51,29 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     DocumentSnapshot? lastDoc,
   }) async {
     try {
-      Query query = _products.where('status', isEqualTo: 'active').where('isAvailable', isEqualTo: true);
+      Query query = _products
+          .where('status', isEqualTo: 'active')
+          .where('isAvailable', isEqualTo: true);
 
-      if (categoryId != null) query = query.where('categoryId', isEqualTo: categoryId);
+      if (categoryId != null) {
+        query = query.where('categoryId', isEqualTo: categoryId);
+      }
 
       switch (sortBy) {
-        case 'price_asc':   query = query.orderBy('price', descending: false); break;
-        case 'price_desc':  query = query.orderBy('price', descending: true);  break;
-        case 'rating':      query = query.orderBy('rating', descending: true); break;
-        case 'newest':      query = query.orderBy('createdAt', descending: true); break;
-        default:            query = query.orderBy('soldCount', descending: true);
+        case 'price_asc':
+          query = query.orderBy('price', descending: false);
+          break;
+        case 'price_desc':
+          query = query.orderBy('price', descending: true);
+          break;
+        case 'rating':
+          query = query.orderBy('rating', descending: true);
+          break;
+        case 'newest':
+          query = query.orderBy('createdAt', descending: true);
+          break;
+        default:
+          query = query.orderBy('soldCount', descending: true);
       }
 
       query = query.limit(limit);
@@ -107,7 +122,10 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   @override
   Future<ProductModel> getProductById(String id) async {
     final doc = await _products.doc(id).get();
-    if (!doc.exists) throw const ServerException(message: 'Product not found', statusCode: 404);
+    if (!doc.exists) {
+      throw const ServerException(
+          message: 'Product not found', statusCode: 404);
+    }
     return ProductModel.fromFirestore(doc);
   }
 
@@ -121,7 +139,8 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   @override
-  Future<List<ProductModel>> getRelatedProducts(String productId, String categoryId) async {
+  Future<List<ProductModel>> getRelatedProducts(
+      String productId, String categoryId) async {
     final snap = await _products
         .where('categoryId', isEqualTo: categoryId)
         .where('status', isEqualTo: 'active')
@@ -141,27 +160,34 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
         .child(productId)
         .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
 
-    final task = await ref.putFile(image, SettableMetadata(contentType: 'image/jpeg'));
+    final task =
+        await ref.putFile(image, SettableMetadata(contentType: 'image/jpeg'));
     return await task.ref.getDownloadURL();
   }
 
   @override
   Future<ProductModel> addProduct(Map<String, dynamic> data) async {
-    final ref = await _products.add({...data, 'createdAt': FieldValue.serverTimestamp()});
+    final ref = await _products
+        .add({...data, 'createdAt': FieldValue.serverTimestamp()});
     final doc = await ref.get();
     return ProductModel.fromFirestore(doc);
   }
 
   @override
-  Future<ProductModel> updateProduct(String id, Map<String, dynamic> data) async {
-    await _products.doc(id).update({...data, 'updatedAt': FieldValue.serverTimestamp()});
+  Future<ProductModel> updateProduct(
+      String id, Map<String, dynamic> data) async {
+    await _products
+        .doc(id)
+        .update({...data, 'updatedAt': FieldValue.serverTimestamp()});
     final doc = await _products.doc(id).get();
     return ProductModel.fromFirestore(doc);
   }
 
   @override
   Future<void> deleteProduct(String id) async {
-    await _products.doc(id).update({'status': 'inactive', 'isAvailable': false});
+    await _products
+        .doc(id)
+        .update({'status': 'inactive', 'isAvailable': false});
   }
 
   @override

@@ -51,7 +51,6 @@ class AdminDashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final statsAsync = ref.watch(adminStatsProvider);
     final recentAsync = ref.watch(recentOrdersProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -62,11 +61,15 @@ class AdminDashboardScreen extends ConsumerWidget {
             expandedHeight: 140,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text('Admin Dashboard', style: HATextStyles.h3.copyWith(color: Colors.white)),
+              title: Text('Admin Dashboard',
+                  style: HATextStyles.h3.copyWith(color: Colors.white)),
               background: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [HAColors.primary, HAColors.secondary.withOpacity(0.7)],
+                    colors: [
+                      HAColors.primary,
+                      HAColors.secondary.withValues(alpha: 0.7)
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -76,11 +79,11 @@ class AdminDashboardScreen extends ConsumerWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.logout_rounded, color: Colors.white),
-                onPressed: () => ref.read(authNotifierProvider.notifier).signOut(),
+                onPressed: () =>
+                    ref.read(authNotifierProvider.notifier).signOut(),
               ),
             ],
           ),
-
           SliverPadding(
             padding: const EdgeInsets.all(16),
             sliver: SliverList(
@@ -94,7 +97,9 @@ class AdminDashboardScreen extends ConsumerWidget {
                 const SizedBox(height: 20),
 
                 // Quick actions
-                Text('Quick Actions', style: HATextStyles.h4.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+                Text('Quick Actions',
+                    style: HATextStyles.h4.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface)),
                 const SizedBox(height: 12),
                 _QuickActions(),
                 const SizedBox(height: 20),
@@ -103,21 +108,27 @@ class AdminDashboardScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Recent Orders', style: HATextStyles.h4.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+                    Text('Recent Orders',
+                        style: HATextStyles.h4.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface)),
                     TextButton(
                       onPressed: () => context.push('/admin/orders'),
-                      child: Text('View All', style: TextStyle(color: HAColors.secondary)),
+                      child: const Text('View All',
+                          style: TextStyle(color: HAColors.secondary)),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 recentAsync.when(
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   error: (e, _) => Text('Error: $e'),
                   data: (orders) => orders.isEmpty
                       ? const Center(child: Text('No orders yet'))
                       : Column(
-                          children: orders.map((o) => _RecentOrderRow(order: o)).toList(),
+                          children: orders
+                              .map((o) => _RecentOrderRow(order: o))
+                              .toList(),
                         ),
                 ),
               ]),
@@ -179,7 +190,11 @@ class _StatCard extends StatelessWidget {
   final IconData icon;
   final Color color;
 
-  const _StatCard({required this.label, required this.value, required this.icon, required this.color});
+  const _StatCard(
+      {required this.label,
+      required this.value,
+      required this.icon,
+      required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +204,8 @@ class _StatCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+        border: Border.all(
+            color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,7 +216,7 @@ class _StatCard extends StatelessWidget {
             height: 36,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
             ),
             child: Icon(icon, size: 18, color: color),
           ),
@@ -208,9 +224,13 @@ class _StatCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(value, style: HATextStyles.h3.copyWith(color: color)),
-              Text(label, style: HATextStyles.labelSmall.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-              )),
+              Text(label,
+                  style: HATextStyles.labelSmall.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.6),
+                  )),
             ],
           ),
         ],
@@ -232,12 +252,14 @@ class _StatsGridSkeleton extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       childAspectRatio: 1.4,
-      children: List.generate(4, (_) => Container(
-        decoration: BoxDecoration(
-          color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
-          borderRadius: BorderRadius.circular(16),
-        ),
-      )),
+      children: List.generate(
+          4,
+          (_) => Container(
+                decoration: BoxDecoration(
+                  color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              )),
     );
   }
 }
@@ -247,21 +269,24 @@ class _QuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: _ActionButton(
+        Expanded(
+            child: _ActionButton(
           icon: Icons.add_box_outlined,
           label: 'Add Product',
           color: HAColors.secondary,
           onTap: () => context.push('/admin/products/add'),
         )),
         const SizedBox(width: 12),
-        Expanded(child: _ActionButton(
+        Expanded(
+            child: _ActionButton(
           icon: Icons.inventory_2_outlined,
           label: 'Products',
           color: HAColors.accent,
           onTap: () => context.push('/admin/products'),
         )),
         const SizedBox(width: 12),
-        Expanded(child: _ActionButton(
+        Expanded(
+            child: _ActionButton(
           icon: Icons.list_alt_outlined,
           label: 'Orders',
           color: HAColors.warning,
@@ -278,25 +303,30 @@ class _ActionButton extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _ActionButton({required this.icon, required this.label, required this.color, required this.onTap});
+  const _ActionButton(
+      {required this.icon,
+      required this.label,
+      required this.color,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
             Icon(icon, color: color, size: 24),
             const SizedBox(height: 6),
-            Text(label, style: HATextStyles.labelSmall.copyWith(color: color), textAlign: TextAlign.center),
+            Text(label,
+                style: HATextStyles.labelSmall.copyWith(color: color),
+                textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -310,17 +340,18 @@ class _RecentOrderRow extends StatelessWidget {
   const _RecentOrderRow({required this.order});
 
   Color _statusColor(String status) => switch (status) {
-    'delivered' => HAColors.success,
-    'cancelled' => HAColors.error,
-    'shipped' => HAColors.accent,
-    _ => HAColors.warning,
-  };
+        'delivered' => HAColors.success,
+        'cancelled' => HAColors.error,
+        'shipped' => HAColors.accent,
+        _ => HAColors.warning,
+      };
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final status = order['status'] as String? ?? 'pending';
-    final orderId = (order['id'] as String? ?? '').substring(0, 8).toUpperCase();
+    final orderId =
+        (order['id'] as String? ?? '').substring(0, 8).toUpperCase();
     final total = (order['total'] as num?)?.toDouble() ?? 0;
 
     return GestureDetector(
@@ -331,23 +362,30 @@ class _RecentOrderRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+          border: Border.all(
+              color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
         ),
         child: Row(
           children: [
             Expanded(
-              child: Text('#$orderId', style: HATextStyles.labelMedium.copyWith(fontFamily: 'monospace')),
+              child: Text('#$orderId',
+                  style: HATextStyles.labelMedium
+                      .copyWith(fontFamily: 'monospace')),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
-                color: _statusColor(status).withOpacity(0.1),
+                color: _statusColor(status).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(status, style: HATextStyles.labelSmall.copyWith(color: _statusColor(status))),
+              child: Text(status,
+                  style: HATextStyles.labelSmall
+                      .copyWith(color: _statusColor(status))),
             ),
             const SizedBox(width: 12),
-            Text('\$${total.toStringAsFixed(2)}', style: HATextStyles.bodySmall.copyWith(fontWeight: FontWeight.w700)),
+            Text('\$${total.toStringAsFixed(2)}',
+                style: HATextStyles.bodySmall
+                    .copyWith(fontWeight: FontWeight.w700)),
           ],
         ),
       ),

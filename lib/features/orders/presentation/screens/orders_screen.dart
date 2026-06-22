@@ -19,7 +19,8 @@ class OrdersScreen extends ConsumerWidget {
         elevation: 0,
         title: Text(
           'My Orders',
-          style: HATextStyles.h3.copyWith(color: Theme.of(context).colorScheme.onSurface),
+          style: HATextStyles.h3
+              .copyWith(color: Theme.of(context).colorScheme.onSurface),
         ),
       ),
       body: ordersAsync.when(
@@ -51,7 +52,6 @@ class _OrderCard extends StatelessWidget {
     final items = (order['items'] as List?)?.cast<Map>() ?? [];
     final total = (order['total'] as num?)?.toDouble() ?? 0.0;
     final orderId = order['id'] as String? ?? '';
-    final createdAt = (order['createdAt'] as dynamic);
 
     return GestureDetector(
       onTap: () => context.push('/orders/${order['id']}'),
@@ -60,7 +60,8 @@ class _OrderCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+          border: Border.all(
+              color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +82,8 @@ class _OrderCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               '${items.length} item${items.length != 1 ? 's' : ''} · \$${total.toStringAsFixed(2)}',
-              style: HATextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
+              style:
+                  HATextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
             ),
             if (items.isNotEmpty) ...[
               const SizedBox(height: 4),
@@ -89,7 +91,10 @@ class _OrderCard extends StatelessWidget {
                 items.take(2).map((i) => i['productName'] ?? '').join(', ') +
                     (items.length > 2 ? ' +${items.length - 2} more' : ''),
                 style: HATextStyles.bodySmall.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -98,13 +103,23 @@ class _OrderCard extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                Icon(Icons.payments_outlined, size: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
+                Icon(Icons.payments_outlined,
+                    size: 14,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.5)),
                 const SizedBox(width: 4),
-                Text('Cash on Delivery', style: HATextStyles.bodySmall.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                )),
+                Text('Cash on Delivery',
+                    style: HATextStyles.bodySmall.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.5),
+                    )),
                 const Spacer(),
-                Icon(Icons.arrow_forward_ios_rounded, size: 14, color: HAColors.secondary),
+                const Icon(Icons.arrow_forward_ios_rounded,
+                    size: 14, color: HAColors.secondary),
               ],
             ),
           ],
@@ -124,7 +139,7 @@ class _StatusChip extends StatelessWidget {
         'cancelled' => HAColors.error,
         'shipped' => HAColors.accent,
         'processing' || 'confirmed' => HAColors.warning,
-        _ => HAColors.secondary.withOpacity(0.7),
+        _ => HAColors.secondary.withValues(alpha: 0.7),
       };
 
   @override
@@ -132,12 +147,13 @@ class _StatusChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: _color.withOpacity(0.12),
+        color: _color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         orderStatusLabel(status),
-        style: HATextStyles.labelSmall.copyWith(color: _color, fontWeight: FontWeight.w600),
+        style: HATextStyles.labelSmall
+            .copyWith(color: _color, fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -159,18 +175,22 @@ class _EmptyOrdersView extends StatelessWidget {
               height: 120,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: HAColors.secondary.withOpacity(0.1),
+                color: HAColors.secondary.withValues(alpha: 0.1),
               ),
-              child: Icon(Icons.receipt_long_outlined, size: 56, color: HAColors.secondary),
+              child: const Icon(Icons.receipt_long_outlined,
+                  size: 56, color: HAColors.secondary),
             ),
             const SizedBox(height: 24),
-            Text('No Orders Yet', style: HATextStyles.h3),
+            const Text('No Orders Yet', style: HATextStyles.h3),
             const SizedBox(height: 8),
             Text(
               'Your order history will appear here once you make a purchase.',
               textAlign: TextAlign.center,
               style: HATextStyles.bodyMedium.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.6),
               ),
             ),
           ],

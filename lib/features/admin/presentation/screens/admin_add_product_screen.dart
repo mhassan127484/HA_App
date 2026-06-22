@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
@@ -13,7 +12,8 @@ class AdminAddProductScreen extends ConsumerStatefulWidget {
   const AdminAddProductScreen({super.key, this.productId});
 
   @override
-  ConsumerState<AdminAddProductScreen> createState() => _AdminAddProductScreenState();
+  ConsumerState<AdminAddProductScreen> createState() =>
+      _AdminAddProductScreenState();
 }
 
 class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
@@ -34,8 +34,16 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
 
   final List<String> _imageUrls = [];
   final List<String> _categories = [
-    'Electronics', 'Clothing', 'Books', 'Home & Kitchen', 'Sports',
-    'Beauty', 'Toys', 'Food & Beverage', 'Automotive', 'Other'
+    'Electronics',
+    'Clothing',
+    'Books',
+    'Home & Kitchen',
+    'Sports',
+    'Beauty',
+    'Toys',
+    'Food & Beverage',
+    'Automotive',
+    'Other'
   ];
 
   @override
@@ -64,16 +72,23 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
     try {
       final productId = const Uuid().v4();
       final price = double.parse(_priceCtrl.text);
-      final salePrice = _salePriceCtrl.text.isNotEmpty ? double.tryParse(_salePriceCtrl.text) : null;
+      final salePrice = _salePriceCtrl.text.isNotEmpty
+          ? double.tryParse(_salePriceCtrl.text)
+          : null;
 
-      await FirebaseFirestore.instance.collection('products').doc(productId).set({
+      await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productId)
+          .set({
         'id': productId,
         'name': _nameCtrl.text.trim(),
         'description': _descCtrl.text.trim(),
         'price': price,
         'salePrice': salePrice,
         'stockQuantity': int.parse(_stockCtrl.text),
-        'sku': _skuCtrl.text.trim().isEmpty ? productId.substring(0, 8).toUpperCase() : _skuCtrl.text.trim(),
+        'sku': _skuCtrl.text.trim().isEmpty
+            ? productId.substring(0, 8).toUpperCase()
+            : _skuCtrl.text.trim(),
         'images': _imageUrls,
         'categoryId': _selectedCategory.toLowerCase().replaceAll(' ', '_'),
         'category': _selectedCategory,
@@ -89,8 +104,8 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Product added successfully!'),
+          const SnackBar(
+            content: Text('Product added successfully!'),
             backgroundColor: HAColors.success,
           ),
         );
@@ -126,7 +141,9 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
-        title: Text('Add Product', style: HATextStyles.h3.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+        title: Text('Add Product',
+            style: HATextStyles.h3
+                .copyWith(color: Theme.of(context).colorScheme.onSurface)),
       ),
       body: Form(
         key: _formKey,
@@ -134,31 +151,52 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
           padding: const EdgeInsets.all(20),
           children: [
             // Basic Info
-            _SectionHeader('Basic Information'),
-            _Field(label: 'Product Name *', controller: _nameCtrl,
+            const _SectionHeader('Basic Information'),
+            _Field(
+                label: 'Product Name *',
+                controller: _nameCtrl,
                 hint: 'e.g. Premium Wireless Headphones',
                 validator: (v) => v!.trim().isEmpty ? 'Required' : null),
-            _Field(label: 'Description *', controller: _descCtrl,
-                hint: 'Describe the product...', maxLines: 4,
+            _Field(
+                label: 'Description *',
+                controller: _descCtrl,
+                hint: 'Describe the product...',
+                maxLines: 4,
                 validator: (v) => v!.trim().isEmpty ? 'Required' : null),
-            _Field(label: 'SKU', controller: _skuCtrl, hint: 'Auto-generated if blank'),
+            _Field(
+                label: 'SKU',
+                controller: _skuCtrl,
+                hint: 'Auto-generated if blank'),
             const SizedBox(height: 16),
 
             // Pricing
-            _SectionHeader('Pricing & Stock'),
+            const _SectionHeader('Pricing & Stock'),
             Row(children: [
-              Expanded(child: _Field(label: 'Price *', controller: _priceCtrl, hint: '0.00',
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  validator: (v) {
-                    if (v!.isEmpty) return 'Required';
-                    if (double.tryParse(v) == null) return 'Invalid';
-                    return null;
-                  })),
+              Expanded(
+                  child: _Field(
+                      label: 'Price *',
+                      controller: _priceCtrl,
+                      hint: '0.00',
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      validator: (v) {
+                        if (v!.isEmpty) return 'Required';
+                        if (double.tryParse(v) == null) return 'Invalid';
+                        return null;
+                      })),
               const SizedBox(width: 12),
-              Expanded(child: _Field(label: 'Sale Price', controller: _salePriceCtrl, hint: 'Optional',
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true))),
+              Expanded(
+                  child: _Field(
+                      label: 'Sale Price',
+                      controller: _salePriceCtrl,
+                      hint: 'Optional',
+                      keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true))),
             ]),
-            _Field(label: 'Stock Quantity *', controller: _stockCtrl, hint: '0',
+            _Field(
+                label: 'Stock Quantity *',
+                controller: _stockCtrl,
+                hint: '0',
                 keyboardType: TextInputType.number,
                 validator: (v) {
                   if (v!.isEmpty) return 'Required';
@@ -168,30 +206,39 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
             const SizedBox(height: 16),
 
             // Category
-            _SectionHeader('Category'),
+            const _SectionHeader('Category'),
             DropdownButtonFormField<String>(
-              value: _selectedCategory.isEmpty ? null : _selectedCategory,
+              initialValue:
+                  _selectedCategory.isEmpty ? null : _selectedCategory,
               hint: const Text('Select category'),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: isDark ? HAColors.darkBackground : HAColors.lightBackground,
+                fillColor:
+                    isDark ? HAColors.darkBackground : HAColors.lightBackground,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+                  borderSide: BorderSide(
+                      color:
+                          isDark ? HAColors.darkBorder : HAColors.lightBorder),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+                  borderSide: BorderSide(
+                      color:
+                          isDark ? HAColors.darkBorder : HAColors.lightBorder),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               ),
-              items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+              items: _categories
+                  .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                  .toList(),
               onChanged: (v) => setState(() => _selectedCategory = v ?? ''),
             ),
             const SizedBox(height: 16),
 
             // Images
-            _SectionHeader('Product Images'),
+            const _SectionHeader('Product Images'),
             Row(children: [
               Expanded(
                 child: TextField(
@@ -199,16 +246,25 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
                   decoration: InputDecoration(
                     hintText: 'Paste image URL...',
                     filled: true,
-                    fillColor: isDark ? HAColors.darkBackground : HAColors.lightBackground,
+                    fillColor: isDark
+                        ? HAColors.darkBackground
+                        : HAColors.lightBackground,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+                      borderSide: BorderSide(
+                          color: isDark
+                              ? HAColors.darkBorder
+                              : HAColors.lightBorder),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+                      borderSide: BorderSide(
+                          color: isDark
+                              ? HAColors.darkBorder
+                              : HAColors.lightBorder),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                   ),
                 ),
               ),
@@ -218,7 +274,8 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: HAColors.secondary,
                   padding: const EdgeInsets.all(14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
                 child: const Icon(Icons.add_rounded, color: Colors.white),
               ),
@@ -235,9 +292,16 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.network(_imageUrls[i], width: 80, height: 80, fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(width: 80, height: 80, color: HAColors.primary.withOpacity(0.1),
-                                child: const Icon(Icons.broken_image_outlined))),
+                        child: Image.network(_imageUrls[i],
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Container(
+                                width: 80,
+                                height: 80,
+                                color: HAColors.primary.withValues(alpha: 0.1),
+                                child:
+                                    const Icon(Icons.broken_image_outlined))),
                       ),
                       Positioned(
                         top: 4,
@@ -247,8 +311,10 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
                           child: Container(
                             width: 20,
                             height: 20,
-                            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                            child: const Icon(Icons.close_rounded, size: 14, color: Colors.white),
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle, color: Colors.red),
+                            child: const Icon(Icons.close_rounded,
+                                size: 14, color: Colors.white),
                           ),
                         ),
                       ),
@@ -260,7 +326,7 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
             const SizedBox(height: 16),
 
             // Flags
-            _SectionHeader('Visibility'),
+            const _SectionHeader('Visibility'),
             _ToggleRow(
               label: 'Active (visible to customers)',
               value: _isActive,
@@ -281,7 +347,6 @@ class _AdminAddProductScreenState extends ConsumerState<AdminAddProductScreen> {
             HAButton(
               label: _isLoading ? 'Saving...' : 'Add Product',
               onPressed: _isLoading ? null : _saveProduct,
-              
               isLoading: _isLoading,
               leadingIcon: Icons.check_rounded,
             ),
@@ -301,7 +366,8 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Text(text, style: HATextStyles.h5.copyWith(color: HAColors.secondary)),
+      child: Text(text,
+          style: HATextStyles.h5.copyWith(color: HAColors.secondary)),
     );
   }
 }
@@ -341,14 +407,24 @@ class _Field extends StatelessWidget {
             decoration: InputDecoration(
               hintText: hint,
               filled: true,
-              fillColor: isDark ? HAColors.darkBackground : HAColors.lightBackground,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: isDark ? HAColors.darkBorder : HAColors.lightBorder)),
-              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: isDark ? HAColors.darkBorder : HAColors.lightBorder)),
-              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: HAColors.secondary, width: 2)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              fillColor:
+                  isDark ? HAColors.darkBackground : HAColors.lightBackground,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                      color:
+                          isDark ? HAColors.darkBorder : HAColors.lightBorder)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                      color:
+                          isDark ? HAColors.darkBorder : HAColors.lightBorder)),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide:
+                      const BorderSide(color: HAColors.secondary, width: 2)),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             ),
           ),
         ],
@@ -362,7 +438,8 @@ class _ToggleRow extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  const _ToggleRow({required this.label, required this.value, required this.onChanged});
+  const _ToggleRow(
+      {required this.label, required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -373,13 +450,17 @@ class _ToggleRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+        border: Border.all(
+            color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: HATextStyles.bodyMedium),
-          Switch.adaptive(value: value, onChanged: onChanged, activeColor: HAColors.secondary),
+          Switch.adaptive(
+              value: value,
+              onChanged: onChanged,
+              activeColor: HAColors.secondary),
         ],
       ),
     );

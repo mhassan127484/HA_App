@@ -41,21 +41,22 @@ class SkeletonProductCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.haColors.cardBg,
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: context.cs.outline.withOpacity(0.5), width: 0.5),
+        border: Border.all(
+            color: context.cs.outline.withValues(alpha: 0.5), width: 0.5),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SkeletonBox(height: 160, borderRadius: AppRadius.lg),
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SkeletonBox(width: double.infinity, height: 14),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 SkeletonBox(width: 120, height: 12),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 SkeletonBox(width: 80, height: 16),
               ],
             ),
@@ -71,7 +72,7 @@ class SkeletonBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SkeletonBox(height: 180, borderRadius: AppRadius.xl);
+    return const SkeletonBox(height: 180, borderRadius: AppRadius.xl);
   }
 }
 
@@ -80,18 +81,18 @@ class SkeletonListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
           SkeletonBox(width: 56, height: 56, borderRadius: AppRadius.lg),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SkeletonBox(width: double.infinity, height: 14),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 SkeletonBox(width: 160, height: 12),
               ],
             ),

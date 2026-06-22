@@ -58,7 +58,7 @@ class HATheme {
     // NavigationBar
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: HAColors.darkSurface,
-      indicatorColor: HAColors.secondary.withOpacity(0.2),
+      indicatorColor: HAColors.secondary.withValues(alpha: 0.2),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           return const IconThemeData(color: HAColors.secondary);
@@ -74,7 +74,7 @@ class HATheme {
     ),
 
     // Cards
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: HAColors.darkCard,
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -148,7 +148,7 @@ class HATheme {
     // Chip
     chipTheme: ChipThemeData(
       backgroundColor: HAColors.darkElevated,
-      selectedColor: HAColors.secondary.withOpacity(0.2),
+      selectedColor: HAColors.secondary.withValues(alpha: 0.2),
       disabledColor: HAColors.darkCard,
       labelStyle: HATextStyles.labelMedium.copyWith(color: HAColors.textPrimaryDark),
       side: const BorderSide(color: HAColors.darkBorder),
@@ -216,7 +216,7 @@ class HATheme {
 
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: HAColors.lightSurface,
-      indicatorColor: HAColors.secondary.withOpacity(0.12),
+      indicatorColor: HAColors.secondary.withValues(alpha: 0.12),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           return const IconThemeData(color: HAColors.secondary);
@@ -231,7 +231,7 @@ class HATheme {
       }),
     ),
 
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: HAColors.lightCard,
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -290,7 +290,7 @@ class HATheme {
 
     chipTheme: ChipThemeData(
       backgroundColor: HAColors.lightElevated,
-      selectedColor: HAColors.secondary.withOpacity(0.1),
+      selectedColor: HAColors.secondary.withValues(alpha: 0.1),
       labelStyle: HATextStyles.labelMedium.copyWith(color: HAColors.textPrimaryLight),
       side: const BorderSide(color: HAColors.lightBorder),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -342,10 +342,46 @@ class AppRadius {
   static const double full = 999.0;
 }
 
+// ── Spacing constants ─────────────────────────────────────────────────────────
+class AppSpacing {
+  AppSpacing._();
+  static const double xs  = 4.0;
+  static const double sm  = 8.0;
+  static const double md  = 12.0;
+  static const double lg  = 16.0;
+  static const double xl  = 20.0;
+  static const double xxl = 24.0;
+}
+
+// ── Theme-aware color set ─────────────────────────────────────────────────────
+class HAThemeColors {
+  final Color shimmerBase;
+  final Color shimmerHighlight;
+  final Color cardBg;
+  final Color starColor;
+
+  const HAThemeColors({
+    required this.shimmerBase,
+    required this.shimmerHighlight,
+    required this.cardBg,
+    required this.starColor,
+  });
+}
+
 // ── Theme extensions ──────────────────────────────────────────────────────────
 extension ThemeExtensions on BuildContext {
   ColorScheme get cs => Theme.of(this).colorScheme;
   TextTheme   get tt => Theme.of(this).textTheme;
   bool        get isDark => Theme.of(this).brightness == Brightness.dark;
+
+  HAThemeColors get haColors {
+    final dark = Theme.of(this).brightness == Brightness.dark;
+    return HAThemeColors(
+      shimmerBase:      dark ? const Color(0xFF1C2534) : const Color(0xFFE8EAED),
+      shimmerHighlight: dark ? const Color(0xFF2D3A4F) : const Color(0xFFF5F5F5),
+      cardBg:           dark ? const Color(0xFF1C2534) : const Color(0xFFFFFFFF),
+      starColor:        const Color(0xFFF59E0B),
+    );
+  }
 }
 

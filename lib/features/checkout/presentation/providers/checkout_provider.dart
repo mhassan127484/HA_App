@@ -79,7 +79,7 @@ class CheckoutNotifier extends StateNotifier<CheckoutState> {
             .map((item) => {
                   'productId': item.product.id,
                   'productName': item.product.name,
-                  'productImage': item.product.images.isNotEmpty ? item.product.images.first : '',
+                  'productImage': item.product.imageUrls.isNotEmpty ? item.product.imageUrls.first : '',
                   'quantity': item.quantity,
                   'price': item.product.displayPrice,
                   'total': item.itemTotal,

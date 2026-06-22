@@ -21,7 +21,8 @@ class CategoryRow extends ConsumerWidget {
           child: Text(
             'Categories',
             style: HATextStyles.h4.copyWith(
-              color: isDark ? HAColors.textPrimaryDark : HAColors.textPrimaryLight,
+              color:
+                  isDark ? HAColors.textPrimaryDark : HAColors.textPrimaryLight,
             ),
           ),
         ),
@@ -36,7 +37,8 @@ class CategoryRow extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               itemCount: cats.length,
               separatorBuilder: (_, __) => const SizedBox(width: 12),
-              itemBuilder: (ctx, i) => _CategoryChip(category: cats[i], isDark: isDark),
+              itemBuilder: (ctx, i) =>
+                  _CategoryChip(category: cats[i], isDark: isDark),
             ),
           ),
         ),
@@ -45,25 +47,25 @@ class CategoryRow extends ConsumerWidget {
   }
 
   Widget _buildSkeletons() => ListView.separated(
-    scrollDirection: Axis.horizontal,
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    itemCount: 6,
-    separatorBuilder: (_, __) => const SizedBox(width: 12),
-    itemBuilder: (_, __) => Column(
-      children: [
-        Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: HAColors.darkElevated,
-            borderRadius: BorderRadius.circular(16),
-          ),
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        itemCount: 6,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (_, __) => Column(
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: HAColors.darkElevated,
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Container(width: 50, height: 10, color: HAColors.darkElevated),
+          ],
         ),
-        const SizedBox(height: 6),
-        Container(width: 50, height: 10, color: HAColors.darkElevated),
-      ],
-    ),
-  );
+      );
 }
 
 class _CategoryChip extends StatelessWidget {
@@ -96,9 +98,9 @@ class _CategoryChip extends StatelessWidget {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
+              color: color.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: color.withOpacity(0.2)),
+              border: Border.all(color: color.withValues(alpha: 0.2)),
             ),
             child: Icon(icon, color: color, size: 26),
           ),
@@ -106,7 +108,9 @@ class _CategoryChip extends StatelessWidget {
           Text(
             category.name,
             style: HATextStyles.labelSmall.copyWith(
-              color: isDark ? HAColors.textSecondaryDark : HAColors.textSecondaryLight,
+              color: isDark
+                  ? HAColors.textSecondaryDark
+                  : HAColors.textSecondaryLight,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

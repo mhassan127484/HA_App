@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ha_ecommerce/core/theme/app_colors.dart';
 import 'package:ha_ecommerce/core/theme/app_theme.dart';
 import 'package:ha_ecommerce/features/cart/presentation/providers/cart_provider.dart';
 import 'package:ha_ecommerce/features/products/domain/entities/product_entity.dart';
@@ -15,7 +16,8 @@ class ProductCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final inCart = ref.watch(
-      cartProvider.select((cart) => cart?.items.any((i) => i.productId == product.id) ?? false),
+      cartProvider
+          .select((cart) => cart.items.any((i) => i.product.id == product.id)),
     );
 
     return GestureDetector(
@@ -25,7 +27,7 @@ class ProductCard extends ConsumerWidget {
           color: context.haColors.cardBg,
           borderRadius: BorderRadius.circular(AppRadius.lg),
           border: Border.all(
-            color: context.cs.outline.withOpacity(0.5),
+            color: context.cs.outline.withValues(alpha: 0.5),
             width: 0.5,
           ),
         ),
@@ -68,6 +70,7 @@ class ProductCard extends ConsumerWidget {
                         itemBuilder: (_, __) => Icon(
                           Icons.star,
                           color: context.haColors.starColor,
+                          size: 12,
                         ),
                       ),
                       const SizedBox(width: 4),
@@ -88,15 +91,15 @@ class ProductCard extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '\$${product.effectivePrice.toStringAsFixed(2)}',
+                              '\$${product.displayPrice.toStringAsFixed(2)}',
                               style: context.tt.titleLarge?.copyWith(
                                 color: context.cs.primary,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            if (product.hasDiscount)
+                            if (product.isOnSale)
                               Text(
-                                '\$${product.compareAtPrice!.toStringAsFixed(2)}',
+                                '\$${product.price.toStringAsFixed(2)}',
                                 style: context.tt.bodySmall?.copyWith(
                                   color: context.cs.onSurfaceVariant,
                                   decoration: TextDecoration.lineThrough,
@@ -108,14 +111,16 @@ class ProductCard extends ConsumerWidget {
                       // Add to cart button
                       GestureDetector(
                         onTap: () {
-                          ref.read(cartProvider.notifier).addToCart(product);
+                          ref.read(cartProvider.notifier).addItem(product);
                         },
                         child: AnimatedContainer(
                           duration: 300.ms,
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: inCart ? context.cs.primary : context.cs.primaryContainer,
+                            color: inCart
+                                ? context.cs.primary
+                                : context.cs.primaryContainer,
                             borderRadius: BorderRadius.circular(AppRadius.sm),
                           ),
                           child: Icon(
@@ -176,12 +181,12 @@ class _ProductImage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (product.isOnFlashSale)
-                _Badge(label: 'Sale', color: AppColors.error),
+              if (product.isFlashSale)
+                const _Badge(label: 'Sale', color: HAColors.error),
               if (product.isFeatured)
-                _Badge(label: 'Featured', color: AppColors.secondary),
+                const _Badge(label: 'Featured', color: HAColors.secondary),
               if (!product.isInStock)
-                _Badge(label: 'Sold out', color: AppColors.slate500),
+                const _Badge(label: 'Sold out', color: HAColors.slate500),
             ],
           ),
         ),

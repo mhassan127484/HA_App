@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
@@ -11,8 +10,7 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userAsync = ref.watch(currentUserProvider);
-    final themeMode = ref.watch(themeModeProvider);
+    final userAsync = ref.watch(authStateProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -28,7 +26,7 @@ class ProfileScreen extends ConsumerWidget {
                   end: Alignment.bottomRight,
                   colors: [
                     HAColors.primary,
-                    HAColors.secondary.withOpacity(0.8),
+                    HAColors.secondary.withValues(alpha: 0.8),
                   ],
                 ),
               ),
@@ -55,7 +53,7 @@ class ProfileScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Account Section
-                  _SectionLabel('Account'),
+                  const _SectionLabel('Account'),
                   _SettingsCard(children: [
                     _SettingsItem(
                       icon: Icons.person_outline_rounded,
@@ -81,10 +79,12 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: 16),
 
                   // Preferences Section
-                  _SectionLabel('Preferences'),
+                  const _SectionLabel('Preferences'),
                   _SettingsCard(children: [
                     _SettingsItem(
-                      icon: isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+                      icon: isDark
+                          ? Icons.dark_mode_outlined
+                          : Icons.light_mode_outlined,
                       label: 'Dark Mode',
                       trailing: Switch.adaptive(
                         value: isDark,
@@ -112,7 +112,7 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: 16),
 
                   // Support Section
-                  _SectionLabel('Support'),
+                  const _SectionLabel('Support'),
                   _SettingsCard(children: [
                     _SettingsItem(
                       icon: Icons.help_outline_rounded,
@@ -166,13 +166,15 @@ class ProfileScreen extends ConsumerWidget {
         title: const Text('Sign Out'),
         content: const Text('Are you sure you want to sign out?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               ref.read(authNotifierProvider.notifier).signOut();
             },
-            child: Text('Sign Out', style: TextStyle(color: HAColors.error)),
+            child:
+                const Text('Sign Out', style: TextStyle(color: HAColors.error)),
           ),
         ],
       ),
@@ -195,13 +197,15 @@ class _ProfileHeader extends StatelessWidget {
           height: 72,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withOpacity(0.4), width: 2),
+            border: Border.all(
+                color: Colors.white.withValues(alpha: 0.4), width: 2),
           ),
           child: ClipOval(
             child: user.photoUrl != null
-                ? CachedNetworkImage(imageUrl: user.photoUrl!, fit: BoxFit.cover)
+                ? CachedNetworkImage(
+                    imageUrl: user.photoUrl!, fit: BoxFit.cover)
                 : Container(
-                    color: Colors.white.withOpacity(0.15),
+                    color: Colors.white.withValues(alpha: 0.15),
                     child: Center(
                       child: Text(
                         (user.displayName?.isNotEmpty == true
@@ -233,7 +237,8 @@ class _ProfileHeader extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 user.email,
-                style: HATextStyles.bodySmall.copyWith(color: Colors.white.withOpacity(0.8)),
+                style: HATextStyles.bodySmall
+                    .copyWith(color: Colors.white.withValues(alpha: 0.8)),
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 6),
@@ -256,9 +261,9 @@ class _RoleBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.4)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.4)),
       ),
       child: Text(
         role.toUpperCase(),
@@ -284,18 +289,26 @@ class _ProfileHeaderSkeleton extends StatelessWidget {
           height: 72,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
           ),
         ),
         const SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(width: 120, height: 18, decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(4))),
+            Container(
+                width: 120,
+                height: 18,
+                decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(4))),
             const SizedBox(height: 6),
-            Container(width: 180, height: 14, decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(4))),
+            Container(
+                width: 180,
+                height: 14,
+                decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(4))),
           ],
         ),
       ],
@@ -316,7 +329,7 @@ class _SectionLabel extends StatelessWidget {
         text.toUpperCase(),
         style: HATextStyles.labelSmall.copyWith(
           letterSpacing: 1.5,
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
         ),
       ),
     );
@@ -335,7 +348,8 @@ class _SettingsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+        border: Border.all(
+            color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
       ),
       child: Column(
         children: children.asMap().entries.map((entry) {
@@ -345,7 +359,10 @@ class _SettingsCard extends StatelessWidget {
             children: [
               child,
               if (i < children.length - 1)
-                Divider(height: 1, indent: 52, color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+                Divider(
+                    height: 1,
+                    indent: 52,
+                    color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
             ],
           );
         }).toList(),
@@ -385,7 +402,7 @@ class _SettingsItem extends StatelessWidget {
         height: 36,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: (iconColor ?? HAColors.secondary).withOpacity(0.1),
+          color: (iconColor ?? HAColors.secondary).withValues(alpha: 0.1),
         ),
         child: Icon(icon, size: 18, color: iconColor ?? HAColors.secondary),
       ),
@@ -401,19 +418,31 @@ class _SettingsItem extends StatelessWidget {
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(value!, style: HATextStyles.bodySmall.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                    )),
+                    Text(value!,
+                        style: HATextStyles.bodySmall.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.5),
+                        )),
                     if (showChevron) ...[
                       const SizedBox(width: 4),
-                      Icon(Icons.chevron_right_rounded, size: 18,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
+                      Icon(Icons.chevron_right_rounded,
+                          size: 18,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.3)),
                     ],
                   ],
                 )
               : showChevron
-                  ? Icon(Icons.chevron_right_rounded, size: 18,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3))
+                  ? Icon(Icons.chevron_right_rounded,
+                      size: 18,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.3))
                   : null),
     );
   }

@@ -56,11 +56,11 @@ class HAProductCardSkeleton extends StatelessWidget {
           color: isDark ? HAColors.darkBorder : HAColors.lightBorder,
         ),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HAShimmerBox(height: 160, borderRadius: 0),
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +89,7 @@ class HABannerSkeleton extends StatelessWidget {
   const HABannerSkeleton({super.key});
 
   @override
-  Widget build(BuildContext context) => HAShimmerBox(
+  Widget build(BuildContext context) => const HAShimmerBox(
     width: double.infinity,
     height: 180,
     borderRadius: 20,

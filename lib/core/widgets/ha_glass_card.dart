@@ -46,7 +46,7 @@ class HAGlassCard extends StatelessWidget {
                     ),
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(
-                color: borderColor ?? (isDark ? HAColors.darkBorder : Colors.white.withOpacity(0.3)),
+                color: borderColor ?? (isDark ? HAColors.darkBorder : Colors.white.withValues(alpha: 0.3)),
                 width: 1,
               ),
             ),

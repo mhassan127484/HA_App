@@ -1,12 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/ha_shimmer.dart';
-import '../../../products/presentation/providers/product_provider.dart';
-import '../../../products/domain/entities/product_entity.dart';
 
 class BannerCarousel extends ConsumerStatefulWidget {
   const BannerCarousel({super.key});
@@ -29,7 +25,7 @@ class _BannerCarouselState extends ConsumerState<BannerCarousel> {
         AnimatedSmoothIndicator(
           activeIndex: _currentIndex,
           count: 3,
-          effect: ExpandingDotsEffect(
+          effect: const ExpandingDotsEffect(
             activeDotColor: HAColors.secondary,
             dotColor: HAColors.slate600,
             dotHeight: 6,
@@ -42,18 +38,18 @@ class _BannerCarouselState extends ConsumerState<BannerCarousel> {
   }
 
   Widget _buildCarousel() => CarouselSlider(
-    options: CarouselOptions(
-      height: 190,
-      viewportFraction: 0.88,
-      enlargeCenterPage: true,
-      enlargeFactor: 0.15,
-      autoPlay: true,
-      autoPlayInterval: const Duration(seconds: 4),
-      autoPlayCurve: Curves.easeInOutCubic,
-      onPageChanged: (i, _) => setState(() => _currentIndex = i),
-    ),
-    items: List.generate(3, (i) => _BannerItem(index: i)),
-  );
+        options: CarouselOptions(
+          height: 190,
+          viewportFraction: 0.88,
+          enlargeCenterPage: true,
+          enlargeFactor: 0.15,
+          autoPlay: true,
+          autoPlayInterval: const Duration(seconds: 4),
+          autoPlayCurve: Curves.easeInOutCubic,
+          onPageChanged: (i, _) => setState(() => _currentIndex = i),
+        ),
+        items: List.generate(3, (i) => _BannerItem(index: i)),
+      );
 }
 
 class _BannerItem extends StatelessWidget {
@@ -95,7 +91,7 @@ class _BannerItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: banner.gradient.first.withOpacity(0.4),
+            color: banner.gradient.first.withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -110,7 +106,7 @@ class _BannerItem extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -136,7 +132,7 @@ class _BannerItem extends StatelessWidget {
             Text(
               banner.subtitle,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.85),
+                color: Colors.white.withValues(alpha: 0.85),
                 fontSize: 13,
               ),
             ),

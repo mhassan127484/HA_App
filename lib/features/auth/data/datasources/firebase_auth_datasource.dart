@@ -72,13 +72,14 @@ class FirebaseAuthDataSource implements IAuthDataSource {
       displayName: displayName,
       photoUrl: null,
       phoneNumber: null,
-      emailVerified: refreshed.emailVerified,
+      role: AppConstants.roleCustomer,
+      isEmailVerified: refreshed.emailVerified,
       createdAt: DateTime.now(),
     );
     await _firestore
-        .collection(FirestoreCollections.users)
+        .collection(AppConstants.usersCollection)
         .doc(refreshed.uid)
-        .set(model.toFirestore());
+        .set(model.toMap());
     return model;
   }
 
@@ -101,7 +102,7 @@ class FirebaseAuthDataSource implements IAuthDataSource {
   Future<void> deleteAccount() async {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
-      await _firestore.collection(FirestoreCollections.users).doc(user.uid).delete();
+      await _firestore.collection(AppConstants.usersCollection).doc(user.uid).delete();
       await user.delete();
     }
   }
@@ -125,7 +126,7 @@ class FirebaseAuthDataSource implements IAuthDataSource {
     if (phoneNumber != null) updates['phoneNumber'] = phoneNumber;
 
     await _firestore
-        .collection(FirestoreCollections.users)
+        .collection(AppConstants.usersCollection)
         .doc(user.uid)
         .update(updates);
 
@@ -135,7 +136,7 @@ class FirebaseAuthDataSource implements IAuthDataSource {
 
   @override
   Future<void> updateFcmToken({required String uid, required String token}) =>
-      _firestore.collection(FirestoreCollections.users).doc(uid).update({
+      _firestore.collection(AppConstants.usersCollection).doc(uid).update({
         'fcmToken': token,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -151,7 +152,7 @@ class FirebaseAuthDataSource implements IAuthDataSource {
   @override
   Future<UserModel?> getUserFromFirestore(String uid) async {
     final doc = await _firestore
-        .collection(FirestoreCollections.users)
+        .collection(AppConstants.usersCollection)
         .doc(uid)
         .get();
     if (!doc.exists) return null;
@@ -160,7 +161,7 @@ class FirebaseAuthDataSource implements IAuthDataSource {
 
   // ─── Helpers ───────────────────────────────────────────────────────────────
   Future<void> _updateEmailVerified(String uid, bool verified) async {
-    await _firestore.collection(FirestoreCollections.users).doc(uid).update({
+    await _firestore.collection(AppConstants.usersCollection).doc(uid).update({
       'emailVerified': verified,
     }).catchError((_) {});
   }
@@ -172,7 +173,8 @@ class FirebaseAuthDataSource implements IAuthDataSource {
       displayName: user.displayName,
       photoUrl: user.photoURL,
       phoneNumber: extra?['phoneNumber'] ?? user.phoneNumber,
-      emailVerified: user.emailVerified,
+      role: AppConstants.roleCustomer,
+      isEmailVerified: user.emailVerified,
       createdAt: user.metadata.creationTime ?? DateTime.now(),
       updatedAt: DateTime.now(),
     );

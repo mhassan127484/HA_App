@@ -21,14 +21,17 @@ class OrderDetailScreen extends ConsumerWidget {
         elevation: 0,
         title: Text(
           'Order Details',
-          style: HATextStyles.h3.copyWith(color: Theme.of(context).colorScheme.onSurface),
+          style: HATextStyles.h3
+              .copyWith(color: Theme.of(context).colorScheme.onSurface),
         ),
       ),
       body: orderAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error loading order')),
+        error: (err, _) => const Center(child: Text('Error loading order')),
         data: (order) {
-          if (order == null) return const Center(child: Text('Order not found'));
+          if (order == null) {
+            return const Center(child: Text('Order not found'));
+          }
           return _OrderDetailContent(order: order);
         },
       ),
@@ -63,7 +66,7 @@ class _OrderDetailContent extends StatelessWidget {
             children: [
               _InfoRow('Order ID', '#${orderId.substring(0, 8).toUpperCase()}'),
               const SizedBox(height: 6),
-              _InfoRow('Payment', 'Cash on Delivery'),
+              const _InfoRow('Payment', 'Cash on Delivery'),
               const SizedBox(height: 6),
               _InfoRow('Status', orderStatusLabel(status)),
             ],
@@ -77,13 +80,16 @@ class _OrderDetailContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(address['fullName'] ?? '', style: HATextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600)),
+              Text(address['fullName'] ?? '',
+                  style: HATextStyles.bodyMedium
+                      .copyWith(fontWeight: FontWeight.w600)),
               Text(address['phone'] ?? '', style: HATextStyles.bodySmall),
               const SizedBox(height: 4),
               Text(
                 [
                   address['addressLine1'],
-                  if ((address['addressLine2'] as String?)?.isNotEmpty ?? false) address['addressLine2'],
+                  if ((address['addressLine2'] as String?)?.isNotEmpty ?? false)
+                    address['addressLine2'],
                   '${address['city']}, ${address['state']} ${address['postalCode']}',
                 ].join('\n'),
                 style: HATextStyles.bodySmall,
@@ -97,7 +103,10 @@ class _OrderDetailContent extends StatelessWidget {
         _Section(
           title: '${items.length} Item${items.length != 1 ? 's' : ''}',
           child: Column(
-            children: items.map((item) => _OrderItemRow(item: Map<String, dynamic>.from(item))).toList(),
+            children: items
+                .map((item) =>
+                    _OrderItemRow(item: Map<String, dynamic>.from(item)))
+                .toList(),
           ),
         ),
         const SizedBox(height: 12),
@@ -107,7 +116,8 @@ class _OrderDetailContent extends StatelessWidget {
           title: 'Price Details',
           child: Column(
             children: [
-              _PriceRow('Subtotal', '\$${((order['subtotal'] as num?)?.toDouble() ?? 0).toStringAsFixed(2)}'),
+              _PriceRow('Subtotal',
+                  '\$${((order['subtotal'] as num?)?.toDouble() ?? 0).toStringAsFixed(2)}'),
               const SizedBox(height: 6),
               _PriceRow(
                 'Delivery',
@@ -118,11 +128,14 @@ class _OrderDetailContent extends StatelessWidget {
               if ((order['totalSavings'] as num?)?.toDouble() != null &&
                   (order['totalSavings'] as num).toDouble() > 0) ...[
                 const SizedBox(height: 6),
-                _PriceRow('Savings', '-\$${(order['totalSavings'] as num).toDouble().toStringAsFixed(2)}',
+                _PriceRow('Savings',
+                    '-\$${(order['totalSavings'] as num).toDouble().toStringAsFixed(2)}',
                     color: HAColors.success),
               ],
               const Divider(height: 16),
-              _PriceRow('Total', '\$${((order['total'] as num?)?.toDouble() ?? 0).toStringAsFixed(2)}', isBold: true),
+              _PriceRow('Total',
+                  '\$${((order['total'] as num?)?.toDouble() ?? 0).toStringAsFixed(2)}',
+                  isBold: true),
             ],
           ),
         ),
@@ -136,7 +149,13 @@ class _StatusTracker extends StatelessWidget {
 
   const _StatusTracker({required this.status});
 
-  static const _steps = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
+  static const _steps = [
+    'pending',
+    'confirmed',
+    'processing',
+    'shipped',
+    'delivered'
+  ];
 
   int get _currentIndex => _steps.indexOf(status).clamp(0, _steps.length - 1);
 
@@ -146,15 +165,17 @@ class _StatusTracker extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: HAColors.error.withOpacity(0.1),
+          color: HAColors.error.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: HAColors.error.withOpacity(0.3)),
+          border: Border.all(color: HAColors.error.withValues(alpha: 0.3)),
         ),
         child: Row(
           children: [
-            Icon(Icons.cancel_outlined, color: HAColors.error),
+            const Icon(Icons.cancel_outlined, color: HAColors.error),
             const SizedBox(width: 12),
-            Text('Order Cancelled', style: HATextStyles.bodyMedium.copyWith(color: HAColors.error, fontWeight: FontWeight.w600)),
+            Text('Order Cancelled',
+                style: HATextStyles.bodyMedium.copyWith(
+                    color: HAColors.error, fontWeight: FontWeight.w600)),
           ],
         ),
       );
@@ -167,12 +188,15 @@ class _StatusTracker extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+        border: Border.all(
+            color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Order Status', style: HATextStyles.labelLarge.copyWith(color: HAColors.secondary)),
+          Text('Order Status',
+              style:
+                  HATextStyles.labelLarge.copyWith(color: HAColors.secondary)),
           const SizedBox(height: 16),
           Row(
             children: _steps.asMap().entries.map((entry) {
@@ -191,12 +215,17 @@ class _StatusTracker extends StatelessWidget {
                           height: 28,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: isDone ? HAColors.secondary : HAColors.secondary.withOpacity(0.2),
+                            color: isDone
+                                ? HAColors.secondary
+                                : HAColors.secondary.withValues(alpha: 0.2),
                           ),
                           child: Center(
                             child: isDone
-                                ? const Icon(Icons.check_rounded, size: 16, color: Colors.white)
-                                : Text('${i + 1}', style: const TextStyle(color: Colors.white, fontSize: 11)),
+                                ? const Icon(Icons.check_rounded,
+                                    size: 16, color: Colors.white)
+                                : Text('${i + 1}',
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 11)),
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -204,7 +233,12 @@ class _StatusTracker extends StatelessWidget {
                           orderStatusLabel(step),
                           style: HATextStyles.labelSmall.copyWith(
                             fontSize: 9,
-                            color: isDone ? HAColors.secondary : Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+                            color: isDone
+                                ? HAColors.secondary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.4),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -215,7 +249,9 @@ class _StatusTracker extends StatelessWidget {
                         child: Container(
                           height: 2,
                           margin: const EdgeInsets.only(bottom: 20),
-                          color: i < _currentIndex ? HAColors.secondary : HAColors.secondary.withOpacity(0.2),
+                          color: i < _currentIndex
+                              ? HAColors.secondary
+                              : HAColors.secondary.withValues(alpha: 0.2),
                         ),
                       ),
                   ],
@@ -256,7 +292,7 @@ class _OrderItemRow extends StatelessWidget {
               errorWidget: (_, __, ___) => Container(
                 width: 50,
                 height: 50,
-                color: HAColors.primary.withOpacity(0.1),
+                color: HAColors.primary.withValues(alpha: 0.1),
                 child: const Icon(Icons.image_outlined, size: 20),
               ),
             ),
@@ -266,14 +302,25 @@ class _OrderItemRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: HATextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600), maxLines: 2, overflow: TextOverflow.ellipsis),
+                Text(name,
+                    style: HATextStyles.bodySmall
+                        .copyWith(fontWeight: FontWeight.w600),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis),
                 if (variant != null)
-                  Text(variant, style: HATextStyles.labelSmall.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5))),
+                  Text(variant,
+                      style: HATextStyles.labelSmall.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.5))),
                 Text('Qty: $qty', style: HATextStyles.labelSmall),
               ],
             ),
           ),
-          Text('\$${total.toStringAsFixed(2)}', style: HATextStyles.bodySmall.copyWith(fontWeight: FontWeight.w700)),
+          Text('\$${total.toStringAsFixed(2)}',
+              style:
+                  HATextStyles.bodySmall.copyWith(fontWeight: FontWeight.w700)),
         ],
       ),
     );
@@ -294,12 +341,15 @@ class _Section extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+        border: Border.all(
+            color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: HATextStyles.labelLarge.copyWith(color: HAColors.secondary)),
+          Text(title,
+              style:
+                  HATextStyles.labelLarge.copyWith(color: HAColors.secondary)),
           const SizedBox(height: 12),
           child,
         ],
@@ -318,8 +368,15 @@ class _InfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text('$label: ', style: HATextStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))),
-        Text(value, style: HATextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600)),
+        Text('$label: ',
+            style: HATextStyles.bodySmall.copyWith(
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.6))),
+        Text(value,
+            style:
+                HATextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600)),
       ],
     );
   }
@@ -338,9 +395,16 @@ class _PriceRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: isBold ? HATextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w700) : HATextStyles.bodyMedium),
-        Text(value, style: (isBold ? HATextStyles.priceMain : HATextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600))
-            .copyWith(color: color)),
+        Text(label,
+            style: isBold
+                ? HATextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w700)
+                : HATextStyles.bodyMedium),
+        Text(value,
+            style: (isBold
+                    ? HATextStyles.priceMain
+                    : HATextStyles.bodyMedium
+                        .copyWith(fontWeight: FontWeight.w600))
+                .copyWith(color: color)),
       ],
     );
   }

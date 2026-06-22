@@ -7,12 +7,10 @@ import '../../../products/domain/entities/product_entity.dart';
 import '../../domain/entities/cart_entity.dart';
 
 class CartNotifier extends StateNotifier<CartEntity> {
-  final FirebaseFirestore _firestore;
   final String? _userId;
 
   CartNotifier({required FirebaseFirestore firestore, required String? userId})
-      : _firestore = firestore,
-        _userId = userId,
+      : _userId = userId,
         super(const CartEntity()) {
     if (userId != null) _loadCart();
   }

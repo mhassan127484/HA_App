@@ -76,7 +76,7 @@ class CartScreen extends ConsumerWidget {
               ref.read(cartProvider.notifier).clearCart();
               Navigator.pop(ctx);
             },
-            child: Text('Clear', style: TextStyle(color: HAColors.error)),
+            child: const Text('Clear', style: TextStyle(color: HAColors.error)),
           ),
         ],
       ),
@@ -100,10 +100,11 @@ class _CartItemCard extends ConsumerWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
-          color: HAColors.error.withOpacity(0.1),
+          color: HAColors.error.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Icon(Icons.delete_outline_rounded, color: HAColors.error, size: 28),
+        child: const Icon(Icons.delete_outline_rounded,
+            color: HAColors.error, size: 28),
       ),
       onDismissed: (_) {
         ref.read(cartProvider.notifier).removeItem(item.product.id);
@@ -112,7 +113,9 @@ class _CartItemCard extends ConsumerWidget {
             content: Text('${item.product.name} removed from cart'),
             action: SnackBarAction(
               label: 'Undo',
-              onPressed: () => ref.read(cartProvider.notifier).addItem(item.product, quantity: item.quantity),
+              onPressed: () => ref
+                  .read(cartProvider.notifier)
+                  .addItem(item.product, quantity: item.quantity),
             ),
           ),
         );
@@ -132,15 +135,18 @@ class _CartItemCard extends ConsumerWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: item.product.images.isNotEmpty ? item.product.images.first : '',
+                imageUrl: item.product.imageUrls.isNotEmpty
+                    ? item.product.imageUrls.first
+                    : '',
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
                 errorWidget: (_, __, ___) => Container(
                   width: 80,
                   height: 80,
-                  color: HAColors.primary.withOpacity(0.1),
-                  child: Icon(Icons.image_outlined, color: HAColors.primary.withOpacity(0.5)),
+                  color: HAColors.primary.withValues(alpha: 0.1),
+                  child: Icon(Icons.image_outlined,
+                      color: HAColors.primary.withValues(alpha: 0.5)),
                 ),
               ),
             ),
@@ -165,7 +171,10 @@ class _CartItemCard extends ConsumerWidget {
                     Text(
                       item.selectedVariant!.name,
                       style: HATextStyles.bodySmall.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -179,12 +188,14 @@ class _CartItemCard extends ConsumerWidget {
                         children: [
                           Text(
                             '\$${item.itemTotal.toStringAsFixed(2)}',
-                            style: HATextStyles.priceMain.copyWith(fontSize: 16),
+                            style:
+                                HATextStyles.priceMain.copyWith(fontSize: 16),
                           ),
                           if (item.product.isOnSale)
                             Text(
                               '\$${(item.product.price * item.quantity).toStringAsFixed(2)}',
-                              style: HATextStyles.priceOriginal.copyWith(fontSize: 12),
+                              style: HATextStyles.priceOriginal
+                                  .copyWith(fontSize: 12),
                             ),
                         ],
                       ),
@@ -216,19 +227,24 @@ class _QuantityControl extends ConsumerWidget {
       decoration: BoxDecoration(
         color: isDark ? HAColors.darkBackground : HAColors.lightBackground,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+        border: Border.all(
+            color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           _QtyButton(
-            icon: item.quantity == 1 ? Icons.delete_outline_rounded : Icons.remove_rounded,
+            icon: item.quantity == 1
+                ? Icons.delete_outline_rounded
+                : Icons.remove_rounded,
             color: item.quantity == 1 ? HAColors.error : null,
             onTap: () {
               if (item.quantity == 1) {
                 ref.read(cartProvider.notifier).removeItem(item.product.id);
               } else {
-                ref.read(cartProvider.notifier).updateQuantity(item.product.id, item.quantity - 1);
+                ref
+                    .read(cartProvider.notifier)
+                    .updateQuantity(item.product.id, item.quantity - 1);
               }
             },
           ),
@@ -236,12 +252,15 @@ class _QuantityControl extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
               '${item.quantity}',
-              style: HATextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700),
+              style:
+                  HATextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
           _QtyButton(
-            leadingIcon: Icons.add_rounded,
-            onTap: () => ref.read(cartProvider.notifier).updateQuantity(item.product.id, item.quantity + 1),
+            icon: Icons.add_rounded,
+            onTap: () => ref
+                .read(cartProvider.notifier)
+                .updateQuantity(item.product.id, item.quantity + 1),
           ),
         ],
       ),
@@ -262,7 +281,8 @@ class _QtyButton extends StatelessWidget {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Icon(icon, size: 18, color: color ?? Theme.of(context).colorScheme.onSurface),
+        child: Icon(icon,
+            size: 18, color: color ?? Theme.of(context).colorScheme.onSurface),
       ),
     );
   }
@@ -282,11 +302,12 @@ class _OrderSummary extends ConsumerWidget {
       decoration: BoxDecoration(
         color: isDark ? HAColors.darkSurface : HAColors.lightSurface,
         border: Border(
-          top: BorderSide(color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
+          top: BorderSide(
+              color: isDark ? HAColors.darkBorder : HAColors.lightBorder),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.06),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
             blurRadius: 20,
             offset: const Offset(0, -4),
           ),
@@ -294,15 +315,19 @@ class _OrderSummary extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          _SummaryRow('Subtotal (${cart.itemCount} items)', '\$${cart.subtotal.toStringAsFixed(2)}'),
+          _SummaryRow('Subtotal (${cart.itemCount} items)',
+              '\$${cart.subtotal.toStringAsFixed(2)}'),
           if (cart.totalSavings > 0) ...[
             const SizedBox(height: 6),
-            _SummaryRow('Savings', '-\$${cart.totalSavings.toStringAsFixed(2)}', valueColor: HAColors.success),
+            _SummaryRow('Savings', '-\$${cart.totalSavings.toStringAsFixed(2)}',
+                valueColor: HAColors.success),
           ],
           const SizedBox(height: 6),
           _SummaryRow(
             'Delivery',
-            cart.freeDelivery ? 'FREE' : '\$${cart.deliveryFee.toStringAsFixed(2)}',
+            cart.freeDelivery
+                ? 'FREE'
+                : '\$${cart.deliveryFee.toStringAsFixed(2)}',
             valueColor: cart.freeDelivery ? HAColors.success : null,
           ),
           if (!cart.freeDelivery) ...[
@@ -325,7 +350,6 @@ class _OrderSummary extends ConsumerWidget {
           HAButton(
             label: 'Proceed to Checkout',
             onPressed: () => context.push('/checkout'),
-            
             leadingIcon: Icons.arrow_forward_rounded,
           ),
         ],
@@ -340,7 +364,8 @@ class _SummaryRow extends StatelessWidget {
   final bool isTotal;
   final Color? valueColor;
 
-  const _SummaryRow(this.label, this.value, {this.isTotal = false, this.valueColor});
+  const _SummaryRow(this.label, this.value,
+      {this.isTotal = false, this.valueColor});
 
   @override
   Widget build(BuildContext context) {
@@ -352,7 +377,10 @@ class _SummaryRow extends StatelessWidget {
           style: isTotal
               ? HATextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w700)
               : HATextStyles.bodyMedium.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
         ),
         Text(
@@ -387,9 +415,9 @@ class _EmptyCartView extends StatelessWidget {
               height: 120,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: HAColors.secondary.withOpacity(0.1),
+                color: HAColors.secondary.withValues(alpha: 0.1),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.shopping_cart_outlined,
                 size: 56,
                 color: HAColors.secondary,
@@ -407,7 +435,10 @@ class _EmptyCartView extends StatelessWidget {
               'Looks like you haven\'t added anything yet. Start shopping!',
               textAlign: TextAlign.center,
               style: HATextStyles.bodyMedium.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: 32),
